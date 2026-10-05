@@ -13,6 +13,22 @@
 
 ---
 
+## 🤔 同一台 5090：本仓库 27B NVFP4 vs [Flash-Next 177B MoE](https://github.com/lifeidle/qwen3.8-flash-next-strata-5090-laptop-24gb) —— 怎么选？
+
+两个仓库是同一台 RTX 5090 Laptop 24GB 上的两种使用姿势。差别不在谁更强，在**这台电脑当时扮演什么角色**：
+
+| | **Qwen3.8-27B NVFP4**（本仓库） | [Flash-Next 177B MoE](https://github.com/lifeidle/qwen3.8-flash-next-strata-5090-laptop-24gb) |
+|---|---|---|
+| decode 速度 | 74-78 tok/s | **峰值 110.9 / 长输出 101-103 tok/s** |
+| 稳定上下文 | 160K（180K 起是显存悬崖） | **256K** |
+| CPU | **几乎闲置**（全层常驻 GPU） | 打满（专家 CPU 池 + MTP 流水线与 GPU 同时满载） |
+| 内存 | **低**（15.75 GB 权重 + KV 全在显存） | ~40 GB（专家热层驻留 RAM） |
+| 显存 | ~20 / 24 GiB | 23.2-23.9 / 24 GiB |
+| 跑模型时本机还能办公吗 | **没问题** —— CPU 和内存大量富余，只有显存紧张 | **很受限** —— CPU / 内存 / 显存全被吃满 |
+| 正确角色 | **同机助手**：一边正常用电脑办公，一边用本地 AI | **专用模型服务器**：本机只做"模型提供者"，其他设备经局域网 API 调用 |
+
+**一句话**：要在同一台电脑上一边工作一边用本地 AI → 用本仓库 27B NVFP4；这台电脑当"模型提供者"（本机不干别的）→ 用 [Flash-Next 177B MoE](https://github.com/lifeidle/qwen3.8-flash-next-strata-5090-laptop-24gb)。
+
 ## 🏆 当前主力（Current Champion — 直接照抄）
 
 ![当前主力配置](assets/chart12-champion-stack.svg)
