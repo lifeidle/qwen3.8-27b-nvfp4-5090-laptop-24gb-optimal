@@ -13,6 +13,22 @@
 
 ---
 
+## 🤔 Same 5090, two models: this repo (27B NVFP4) vs [Flash-Next 177B MoE](https://github.com/lifeidle/qwen3.8-flash-next-strata-5090-laptop-24gb) — which one?
+
+Both repos run on the same RTX 5090 Laptop 24GB. The difference is not which model is stronger — it is **what role the machine is playing**:
+
+| | **Qwen3.8-27B NVFP4** (this repo) | [Flash-Next 177B MoE](https://github.com/lifeidle/qwen3.8-flash-next-strata-5090-laptop-24gb) |
+|---|---|---|
+| decode speed | 74-78 tok/s | **110.9 peak / 101-103 sustained tok/s** |
+| stable context | 160K (VRAM cliff from ~180K) | **256K** |
+| CPU | **nearly idle** (all layers resident on GPU) | saturated (expert CPU pool + MTP pipeline load the GPU and CPU together) |
+| RAM | **low** (15.75 GB weights + KV all in VRAM) | ~40 GB (hot expert tiers stay resident) |
+| VRAM | ~20 / 24 GiB | 23.2-23.9 / 24 GiB |
+| Can you keep working on this PC while the model runs? | **yes** — CPU and RAM have plenty of headroom; only VRAM is tight | **barely** — CPU / RAM / VRAM are all consumed |
+| Right role | **same-desk assistant**: keep working on the PC while using the local AI | **dedicated model server**: the PC only serves the model, other devices call it over the LAN API |
+
+**One line**: working and using the AI on the same PC at the same time → this repo, 27B NVFP4. Machine as a "model provider" (nothing else runs on it) → [Flash-Next 177B MoE](https://github.com/lifeidle/qwen3.8-flash-next-strata-5090-laptop-24gb).
+
 ## 🏆 Current Champion (copy-paste ready)
 
 ![current champion](assets/chart12-champion-stack.svg)
